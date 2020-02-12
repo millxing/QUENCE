@@ -1,6 +1,6 @@
 # molly_quence
 
-A fork of [`spunoza's`] [`QUENCE`] [^1], updated for norns 2.0 + output to [`markeats'`] [`molly_the_poly`] [^2]
+A fork of [`spunoza's`] [`QUENCE`]<sup id="a1">[1](#f1)</sup>, updated for norns 2.0 + output<sup id="a2">[2](#f2)</sup> to [`markeats'`] [`molly_the_poly`]
 
 [`spunoza's`] [`tutorial video`]
 
@@ -14,10 +14,10 @@ A fork of [`spunoza's`] [`QUENCE`] [^1], updated for norns 2.0 + output to [`mar
 
 ![<#Track page#>](<assets/track_page.png>)
 
-[^1] [`Original source`]
+<b name="f1">1</b> [`Original source`] [↩](#a1)
 
-[^2] No MIDI anymore - there's a bad bug in there which I can't figure out. PRs encouraged;
-         the MIDI stuff is only commented out at the moment.
+<b name="f2">2</b> No MIDI anymore - there's a bad bug in there which I can't figure out. PRs encouraged;
+                   the MIDI stuff is only commented out at the moment. [↩](#a2)
 
 [`spunoza's`]: https://llllllll.co/u/spunoza/summary
 
