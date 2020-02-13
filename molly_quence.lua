@@ -804,6 +804,7 @@ end
 function key(n, z)
     -- while held, button 3 displays the midi notes of the sequence on the selected track
     if n == 3 and z == 1 then
+        if not seqlen[page] then return end -- we're on the settings page!
         screen.clear()
         local bb = ' '
         for step = 1, seqlen[page] do
