@@ -1,25 +1,41 @@
---[[
-    Q * U * E * N * C * E  x  molly_the_poly
+-- Q * U * E * N * C * E
+--           x
+--    molly_the_poly
+--
+-- a probababilistic
+-- 4-track MIDI sequencer
+-- for norns and grid
+-- 
+-- Rob Schoen
+-- millxing at gmail
+-- 
+-- inspired by
+--  Turing Machine,
+--  Fugue Machine,
+--  and Physical (Norns Study 4)
+-- 
+-- random tips:
+-- bottom row's always the
+--  toolbar: pause, mutes for
+--  tracks 1-4, lock all,
+--  clear all, select tracks
+--  1-4, and select settings
+--  page.
+-- hold button 3 to see the
+--  midi notes in the sequence
+--  for the current track
+-- on the settings page, the
+--  eight buttons in rows 5-6,
+--  cols 13-16 are currently
+--  unassigned, but for now you
+--  can hit any of them to
+--  resync all of the sequences
+-- 
+-- updated for norns 2.0
+-- + molly_the_poly output
+-- by _ground_state_
+-- https://llllllll.co/u/ground_state/summary
 
-    a probababilistic
-    4-track MIDI sequencer
-    for norns and grid
-
-    Rob Schoen
-    millxing at gmail
-
-    inspired by Turing Machine, Fugue Machine, and Physical (Norns Study #4)
-
-    random tips:
-        bottom row is always the toolbar -
-            pause, mutes for tracks 1-4, lock all, clear all, select tracks 1-4,
-            and select settings page
-        hold encoder 3 to see the midi notes in the sequence for the current track
-        on the settings page, the eight buttons in rows 5-6, cols 13-16 are currently
-            unassigned, but for now you can hit any of them to resync all the sequences
-
-    updated for norns 2.0 + molly_the_poly output by _ground_state_ (https://llllllll.co/u/ground_state/summary)
-]]
 engine.name = 'MollyThePoly'
 local music = require 'musicutil'
 local beatclock = require 'beatclock'
