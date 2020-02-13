@@ -1,6 +1,6 @@
 # molly_quence
 
-A fork of [`spunoza's`] [`QUENCE`]<sup id="a1">[1](#f1)</sup>, updated for norns 2.0 + output<sup id="a2">[2](#f2)</sup> to [`markeats'`] [`molly_the_poly`]
+A soft fork of [`spunoza's`] [`QUENCE`]<sup id="a1">[1](#f1)</sup>, updated for norns 2.0 + output<sup id="a2">[2](#f2)</sup> to [`markeats'`] [`molly_the_poly`]
 
 [`spunoza's`] [`tutorial video`]
 
