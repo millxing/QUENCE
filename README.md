@@ -1,6 +1,6 @@
-# molly_quence
+# Q * U * E * N * C * E
 
-A soft fork of [`spunoza's`] [`QUENCE`]<sup id="a1">[1](#f1)</sup>, updated for norns 2.0 + output<sup id="a2">[2](#f2)</sup> to [`markeats'`] [`molly_the_poly`]
+[`spunoza's`] [`QUENCE`], now updated for norns 2.0 + output to [`markeats'`] [`molly_the_poly`]
 
 [`spunoza's`] [`tutorial video`]
 
@@ -14,10 +14,11 @@ A soft fork of [`spunoza's`] [`QUENCE`]<sup id="a1">[1](#f1)</sup>, updated for 
 
 ![<#Track page#>](<assets/track_page.png>)
 
-<b name="f1">1</b> [`Original source`] [↩](#a1)
+## Contributing guidlines
 
-<b name="f2">2</b> No MIDI anymore - there's a bad bug in there which I can't figure out. PRs encouraged;
-                   the MIDI stuff is only commented out at the moment. [↩](#a2)
+Note '.lua-format.cfg' and '.luacheckrc' in the root of this repo. We ask that you please
+    make use of them as configurations for [`luaformatter`] and [`lua-check`], respectively,
+    and run these two tools over any pull requests you might make.
 
 [`spunoza's`]: https://llllllll.co/u/spunoza/summary
 
@@ -29,4 +30,6 @@ A soft fork of [`spunoza's`] [`QUENCE`]<sup id="a1">[1](#f1)</sup>, updated for 
 
 [`tutorial video`]: https://youtu.be/ogu7FdoMybw
 
-[`Original source`]: https://gist.github.com/millxing/3b347fe7a69f72387fac0668871fca9f
+[`luaformatter`]: https://github.com/Koihik/LuaFormatter
+
+[`lua-check`]: https://github.com/mpeterv/luacheck
