@@ -12,17 +12,17 @@ stds.quence = {
         'midi_out_channel',
         'midi_out_device',
         'opening_animation',
-        'redraw',
         'round',
         'shift_left',
         'shift_right',
         'sleep',
         'sync_tracks',
-        'update_sequence'
+        'update_sequence',
     }
 }
 stds.norns = {
     globals = {
+        'cleanup',
         'enc',
         'engine',
         'grid',
@@ -32,9 +32,10 @@ stds.norns = {
         'metro',
         'midi',
         'params',
+        'redraw',
         'screen',
         'tab',
-        'util'
+        'util',
     }
 }
 std = "max+norns+quence"
