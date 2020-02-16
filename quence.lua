@@ -40,7 +40,7 @@ local music = require 'musicutil'
 local beatclock = require 'beatclock'
 local MollyThePoly = require 'molly_the_poly/lib/molly_the_poly_engine'
 local options = {}
-options.OUTPUT = {'audio', 'midi', 'audio + midi'}
+options.OUTPUT = {'midi', 'audio', 'midi + audio'}
 
 -- declare variables
 local position = {}
@@ -138,7 +138,7 @@ function init()
     inact = 4
 
     -- set up musical scale
-    mode = 12 -- default = major pentatonic
+    mode = 13 -- default = minor pentatonic
     center = 48 + (tonicnum - 1) -- tonic center
     scale = music.generate_scale_of_length(center - 12, music.SCALES[mode].name, 24)
     tempo = 60 -- default tempo
@@ -193,7 +193,7 @@ function init()
     clk_midi.event = clk.process_midi
     clk.on_step = count
     clk.on_select_internal = function()
-        clk:start()
+        print('internal')
     end
     clk.on_select_external = function()
         print('external')
@@ -622,11 +622,11 @@ function grid_device.key(x, y, z)
             if pause == 1 then
                 for track = 1, 4 do
                     if mnote[track] > 0 then
-                        if params:get('output') == 1 or params:get('output') == 3 then
+                        if params:get('output') == 2 or params:get('output') == 3 then
                             engine.noteKillAll()
                         end
-                        if (params:get('output') == 2 or params:get('output') == 3) then
-                            midi_device.note_off(mnote[track], 0, track)
+                        if (params:get('output') == 1 or params:get('output') == 3) then
+                            midi_device:note_off(mnote[track], 0, track)
                         end
                     end
                 end
@@ -762,11 +762,11 @@ function count()
             if rests[track][position[track]] == 0 and note ~= nil then
                 note = note + transpose
                 if note > 0 and mute[track] == 0 then
-                    if params:get('output') == 1 or params:get('output') == 3 then
+                    if params:get('output') == 2 or params:get('output') == 3 then
                         local freq = music.note_num_to_freq(note)
                         engine.noteOn(track, freq, 90)
                     end
-                    if (params:get('output') == 2 or params:get('output') == 3) then
+                    if (params:get('output') == 1 or params:get('output') == 3) then
                         midi_device:note_on(note, 90, track)
                     end
                     mnote[track] = note
@@ -952,3 +952,8 @@ function sleep(secs)
     repeat
     until os.clock() > ntime
 end
+
+function cleanup ()
+  clk:stop()
+end
+
