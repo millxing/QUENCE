@@ -1,19 +1,19 @@
 -- Q * U * E * N * C * E
---           x
---    molly_the_poly
 --
 -- a probababilistic
--- 4-track MIDI sequencer
+-- 4-track sequencer
 -- for norns and grid
--- 
+-- with output for MIDI and
+-- molly the poly
+--
 -- Rob Schoen
 -- millxing at gmail
--- 
+--
 -- inspired by
 --  Turing Machine,
 --  Fugue Machine,
 --  and Physical (Norns Study 4)
--- 
+--
 -- random tips:
 -- bottom row's always the
 --  toolbar: pause, mutes for
@@ -30,32 +30,17 @@
 --  unassigned, but for now you
 --  can hit any of them to
 --  resync all of the sequences
--- 
+--
 -- updated for norns 2.0
 -- + molly_the_poly output
 -- by _ground_state_
 -- https://llllllll.co/u/ground_state/summary
-
 engine.name = 'MollyThePoly'
 local music = require 'musicutil'
 local beatclock = require 'beatclock'
 local MollyThePoly = require 'molly_the_poly/lib/molly_the_poly_engine'
 local options = {}
-options.OUTPUT = {'audio'}
-
--- connect grid
-local grid_device = grid.connect()
-
--- midi code
---[[
-local midi_device = midi.connect()
-midi_device.event = function(data)
-    local d = midi.to_msg(data)
-    if d.type == 'note_on' then
-        transpose = d.note - 60
-    end
-end
---]]
+options.OUTPUT = {'audio', 'midi', 'audio + midi'}
 
 -- declare variables
 local position = {}
@@ -68,7 +53,7 @@ local page = 0
 local tpage = 0
 local pagecopy = 0
 local lock = 0
-local pause = 0
+local pause = 1
 local tick = 0
 local tonicnum = 0
 local toniclist = {}
@@ -91,6 +76,17 @@ local steps_copy = {}
 local rests_copy = {}
 local clk = beatclock.new()
 
+-- connect grid
+local grid_device = grid.connect()
+
+-- midi code
+local midi_device = midi.connect()
+midi_device.event = function(data)
+    local d = midi.to_msg(data)
+    if d.type == 'note_on' then
+        transpose = d.note - 60
+    end
+end
 
 function init()
     opening_animation()
@@ -158,57 +154,50 @@ function init()
             rests_copy[step] = rests[1][step]
         end
     end
-
-    --[[
-    params:add {
-        type = "number",
-        id = "midi_out_device",
-        name = "midi out device",
-        min = 1,
-        max = 4,
-        default = 1,
-        action = function(value)
-            midi_out_device = midi.connect(value)
-        end
-    }
-    --]]
-
-    --[[
-    params:add {
-       type = "number",
-       id = "midi_out_channel",
-       name = "midi out channel",
-       min = 1,
-       max = 16,
-       default = 1,
-       action = function(value)
-           midi_out_channel = value
-       end
-    }
-    --]]
-
-    -- clock settings
-    --[[
-    clk_midi = midi.connect()
-    clk_midi.event = clk.process_midi
-    --]]
-    clk.on_step = count
-    --[[
-    clk.on_select_internal = function()
-        clk:start()
-    end
-    clk.on_select_external = function()
-        print('external')
-    end
-    --]]
     params:add{
         type = 'option',
         id = 'output',
         name = 'output',
         options = options.OUTPUT,
         action = function()
+            clear_all_notes()
         end,
     }
+    params:add{
+        type = 'number',
+        id = 'midi_out_device',
+        name = 'midi out device',
+        min = 1,
+        max = 4,
+        default = 1,
+        action = function(value)
+            midi_out_device = midi.connect(value)
+        end,
+    }
+    params:add{
+        type = 'number',
+        id = 'midi_out_channel',
+        name = 'midi out channel',
+        min = 1,
+        max = 16,
+        default = 1,
+        action = function(value)
+            clear_all_notes()
+            midi_out_channel = value
+        end,
+    }
+
+    -- clock settings
+    local clk_midi
+    clk_midi = midi.connect()
+    clk_midi.event = clk.process_midi
+    clk.on_step = count
+    clk.on_select_internal = function()
+        clk:start()
+    end
+    clk.on_select_external = function()
+        print('external')
+    end
     clk:add_clock_params()
     params:set('bpm', tempo)
     params:add_separator()
@@ -217,7 +206,6 @@ function init()
     grid_redraw()
     params:default()
 end
-
 
 -- redraw screen
 function redraw()
@@ -240,7 +228,6 @@ function redraw()
     screen.update()
 end
 
-
 -- redraw grid
 function grid_redraw()
     if tpage ~= page then
@@ -257,7 +244,6 @@ function grid_redraw()
     tpage = page
 end
 
-
 -- redraw toolbar at bottom row of grid
 function grid_redraw_ctrl()
     grid_device:led(1, 8, pause == 1 and maxgrid or inact) -- pause
@@ -267,11 +253,11 @@ function grid_redraw_ctrl()
     grid_device:led(8, 8, lock == 1 and maxgrid or inact) -- lock all
     grid_device:led(9, 8, inact) -- randomize all
     for button = 11, 14 do
-        grid_device:led(button, 8, (page == (button - 10)) and maxgrid or inact) -- select track pages (1-4)
+        -- select track pages (1-4)
+        grid_device:led(button, 8, (page == (button - 10)) and maxgrid or inact)
     end
     grid_device:led(16, 8, page == 0 and maxgrid or inact) -- select home page
 end
-
 
 -- redraw home page of grid
 function grid_redraw_home()
@@ -317,7 +303,6 @@ function grid_redraw_home()
     grid_device:led(16, 6, inact) -- unassigned
 end
 
-
 -- redraw the track view for the selected track
 function grid_redraw_page()
     -- turn off all leds on the top 2 rows
@@ -361,7 +346,6 @@ function grid_redraw_page()
     grid_device:led(8, 7, (press == 807) and maxgrid or inact) -- track lock
     grid_device:led(9, 7, (press == 907) and maxgrid or inact) -- track clear
 end
-
 
 -- grid events
 function grid_device.key(x, y, z)
@@ -636,14 +620,16 @@ function grid_device.key(x, y, z)
 
             -- clear all note ons
             if pause == 1 then
-                --[[
                 for track = 1, 4 do
                     if mnote[track] > 0 then
-                        midi_device.note_off(mnote[track], 0, p)
+                        if params:get('output') == 1 or params:get('output') == 3 then
+                            engine.noteKillAll()
+                        end
+                        if (params:get('output') == 2 or params:get('output') == 3) then
+                            midi_device.note_off(mnote[track], 0, track)
+                        end
                     end
                 end
-                --]]
-                engine.noteKillAll()
             end
         end
 
@@ -752,7 +738,6 @@ function grid_device.key(x, y, z)
     grid_redraw()
 end
 
-
 function count()
     tick = tick + 1
 
@@ -768,7 +753,7 @@ function count()
 
             -- turn off the last note
             if mnote[track] > 0 or mute[track] == 1 then
-                -- midi_device.note_off(mnote[track], 0, track)
+                midi_device:note_off(mnote[track], 0, track)
                 engine.noteOff(track)
             end
             local note = scale[steps[track][position[track]]]
@@ -777,9 +762,13 @@ function count()
             if rests[track][position[track]] == 0 and note ~= nil then
                 note = note + transpose
                 if note > 0 and mute[track] == 0 then
-                    local freq = music.note_num_to_freq(note)
-                    -- midi_device.note_on(note, 90, track)
-                    engine.noteOn(track, freq, 90)
+                    if params:get('output') == 1 or params:get('output') == 3 then
+                        local freq = music.note_num_to_freq(note)
+                        engine.noteOn(track, freq, 90)
+                    end
+                    if (params:get('output') == 2 or params:get('output') == 3) then
+                        midi_device:note_on(note, 90, track)
+                    end
                     mnote[track] = note
                 end
             end
@@ -787,7 +776,6 @@ function count()
     end
     grid_redraw()
 end
-
 
 function update_sequence(track)
     -- updates each sequence in a probabilistic manner
@@ -803,7 +791,8 @@ function update_sequence(track)
         delta = delta + round((15 - steps[track][position[track]]) * .05)
         steps[track][position[track]] = steps[track][tposition] + delta
         if steps[track][position[track]] > #scale then
-            steps[track][position[track]] = #scale - (steps[track][position[track]] - #scale)
+            steps[track][position[track]] =
+                #scale - (steps[track][position[track]] - #scale)
         end
         if steps[track][position[track]] < 1 then
             steps[track][position[track]] = 1 - (steps[track][position[track]])
@@ -816,11 +805,12 @@ function update_sequence(track)
     end
 end
 
-
 function key(n, z)
     -- while held, button 3 displays the midi notes of the sequence on the selected track
     if n == 3 and z == 1 then
-        if not seqlen[page] then return end -- we're on the settings page!
+        if not seqlen[page] then -- we're on the settings page!
+            return
+        end
         screen.clear()
         local bb = ' '
         for step = 1, seqlen[page] do
@@ -851,7 +841,6 @@ function key(n, z)
     end
 end
 
-
 function shift_left()
     -- shifts the sequence to the left, wrapping the first note to the end of the sequence
     -- rewrite this using deepcopy
@@ -865,7 +854,6 @@ function shift_left()
     rests[page][seqlen[page]] = rst
 end
 
-
 function shift_right()
     -- shifts the sequence to the right, wrapping the last note to the start of the sequence
     -- rewrite this using deepcopy
@@ -878,7 +866,6 @@ function shift_right()
     steps[page][1] = stp
     rests[page][1] = rst
 end
-
 
 function deepcopy(orig)
     -- make a copy of a table instead of making a direct reference
@@ -896,30 +883,29 @@ function deepcopy(orig)
     return copy
 end
 
-
-function reverse(orig)
-    -- reverse a numeric table
-    local i, j = 1, #orig
-    while i < j do
-        orig[i], orig[j] = orig[j], orig[i]
-        i = i + 1
-        j = j - 1
-    end
-end
-
-
 function sync_tracks()
     for track = 1, 4 do
         position[track] = 0
     end
 end
 
+function clear_all_notes()
+    for track = 1, 4 do
+        for note = 1, #scale do
+            if params:get('output') == 1 or params:get('output') == 3 then
+                engine.noteKillAll()
+            end
+            if (params:get('output') == 2 or params:get('output') == 3) then
+                midi_device:note_off(scale[note], 0, track)
+            end
+        end
+    end
+end
 
 -- box_muller simulates normally distributed random numbers from uniform random numbers
 function box_muller()
     return math.sqrt(-2 * math.log(math.random())) * math.cos(2 * math.pi * math.random())
 end
-
 
 -- round to nearest integer
 function round(num)
@@ -933,7 +919,6 @@ function round(num)
         return upper
     end
 end
-
 
 -- gratuitous opening animation
 function opening_animation()
@@ -960,7 +945,6 @@ function opening_animation()
     grid_device:all(0)
     grid_device:refresh()
 end
-
 
 -- pause lua code
 function sleep(secs)
