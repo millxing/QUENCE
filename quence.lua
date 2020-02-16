@@ -1,13 +1,18 @@
+-- QUENCE: a probababilistic sequencer
+-- v2.2.8 @spunoza
+-- llllllll.co/t/22222
+
 -- Q * U * E * N * C * E
 --
 -- a probababilistic
 -- 4-track sequencer
 -- for norns and grid
 -- with output for MIDI and
--- molly the poly
+-- Molly the Poly
 --
--- Rob Schoen
+-- by Rob Schoen
 -- millxing at gmail
+-- https://github.com/millxing/QUENCE
 --
 -- inspired by
 --  Turing Machine,
@@ -35,6 +40,7 @@
 -- + molly_the_poly output
 -- by _ground_state_
 -- https://llllllll.co/u/ground_state/summary
+
 engine.name = 'MollyThePoly'
 local music = require 'musicutil'
 local beatclock = require 'beatclock'
