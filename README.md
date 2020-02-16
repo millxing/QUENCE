@@ -24,11 +24,21 @@ updated for norns 2.0 + molly_the_poly output by _ground_state_ https://llllllll
 
 ## random tips:
 
-bottom row is always the toolbar: pause, mutes for tracks 1-4, lock all, clear all, select tracks 1-4, and settings page.
+There are 5 pages in total, a settings page and 4 track pages.
 
-hold button 3 to see the midi notes in the sequence for the current track
+After launching the script, the track page for Track One will be visible and the sequencer will be paused.
 
-on the settings page, the eight buttons in rows 5-6, cols 13-16 are currently unassigned, but for now you can hit any of them to resync all of the sequences
+The bottom row is always the toolbar: pause, mutes for tracks 1-4, lock all, clear all, select tracks 1-4, and settings page.
+
+The LED in the bottom right corner toggles between the current track page and the settings page.
+
+The LED in the bottom left corner toggles the sequencer pause.
+
+On the settings page, the eight buttons in rows 5-6, cols 13-16 are currently unassigned.
+
+For now, pressing any of these LEDs will re-sync all sequences.
+
+Hold Key 3 on the Norns to see the midi notes in the sequence for the current track.
 
 ## contributing guidlines
 
