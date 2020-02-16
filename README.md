@@ -8,7 +8,7 @@ by Rob Schoen (millxing at gmail)
 
 inspired by Turing Machine, Fugue Machine, and Physical (Norns Study 4)
 
-updated for norns 2.0 + molly_the_poly output by _ground_state_ https://llllllll.co/u/ground_state/summary
+updated for norns 2.0 + molly_the_poly output by [`_ground_state_`]
 
 [`tutorial video`]
 
@@ -53,6 +53,8 @@ Note '.lua-format.cfg' and '.luacheckrc' in the root of this repo. We recommend 
 [`markeats'`]: https://llllllll.co/u/markeats/summary
 
 [`molly_the_poly`]: https://github.com/markwheeler/molly_the_poly
+
+[`_ground_state_`]: https://llllllll.co/u/ground_state/summary
 
 [`tutorial video`]: https://youtu.be/ogu7FdoMybw
 
