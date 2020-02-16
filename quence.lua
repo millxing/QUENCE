@@ -1,6 +1,6 @@
 -- QUENCE: a probababilistic sequencer
 -- v2.2.8 @spunoza
--- llllllll.co/t/?????
+-- llllllll.co/t/29436
 
 -- Q * U * E * N * C * E
 --
@@ -12,7 +12,7 @@
 --
 -- by Rob Schoen
 -- millxing at gmail
--- https://github.com/tildebyte/QUENCE
+-- https://github.com/millxing/QUENCE
 --
 -- inspired by
 --  Turing Machine,
