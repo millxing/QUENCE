@@ -38,7 +38,7 @@ stds.norns = {
     }
 }
 std = "max+norns+quence"
-max_line_length = 93
-max_code_line_length = 93
-max_string_line_length = 93
-max_comment_line_length = 93
+max_line_length = 92
+max_code_line_length = 92
+max_string_line_length = 92
+max_comment_line_length = 92
