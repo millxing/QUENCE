@@ -88,12 +88,6 @@ local grid_device = grid.connect()
 
 -- midi code
 local midi_device = midi.connect()
-midi_device.event = function(data)
-    local d = midi.to_msg(data)
-    if d.type == 'note_on' then
-        transpose = d.note - 60
-    end
-end
 
 function init()
     opening_animation()
@@ -171,6 +165,8 @@ function init()
             clear_all_notes()
         end,
     }
+    
+    --[[
     params:add{
         type = 'number',
         id = 'midi_out_device',
@@ -194,7 +190,8 @@ function init()
             midi_out_channel = value
         end,
     }
-
+    ]]--
+    
     -- clock settings
     local clk_midi
     clk_midi = midi.connect()
