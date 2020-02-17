@@ -759,8 +759,12 @@ function count()
 
             -- turn off the last note
             if mnote[track] > 0 or mute[track] == 1 then
-                midi_device:note_off(mnote[track], 0, track)
-                engine.noteOff(track)
+                if params:get('output') == 2 or params:get('output') == 3 then
+                    engine.noteOff(track)
+                end
+                if (params:get('output') == 1 or params:get('output') == 3) then
+                    midi_device:note_off(mnote[track], 0, track)
+                end
             end
             local note = scale[steps[track][position[track]]]
 
@@ -897,11 +901,11 @@ end
 
 function clear_all_notes()
     for track = 1, 4 do
+        if (params:get('output') == 2 or params:get('output') == 3) then
+            engine.noteKillAll()
+        end
         for note = 1, #scale do
-            if params:get('output') == 1 or params:get('output') == 3 then
-                engine.noteKillAll()
-            end
-            if (params:get('output') == 2 or params:get('output') == 3) then
+            if (params:get('output') == 1 or params:get('output') == 3) then
                 midi_device:note_off(scale[note], 0, track)
             end
         end
