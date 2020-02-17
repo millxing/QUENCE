@@ -81,6 +81,7 @@ local rests = {}
 local steps_copy = {}
 local rests_copy = {}
 local clk = beatclock.new()
+local reverse_play = {}
 
 -- connect grid
 local grid_device = grid.connect()
@@ -104,6 +105,7 @@ function init()
         tempomod[track] = 1
         seqlen[track] = 16
         dispersion[track] = 5
+        reverse_play[track] = 0
     end
     page = 1
     tpage = -99
@@ -585,12 +587,7 @@ function grid_device.key(x, y, z)
 
         -- reverse (row 6 col 16)
         if coord == 1606 then
-            local temp_steps = deepcopy(steps[page])
-            local temp_rests = deepcopy(rests[page])
-            for step = 1, seqlen[page] do
-                steps[page][step] = temp_steps[seqlen[page] + 1 - step]
-                rests[page][step] = temp_rests[seqlen[page] + 1 - step]
-            end
+            reverse_play[page] = 1 - reverse_play[page]
             press = coord
         end
 
@@ -752,7 +749,13 @@ function count()
 
         -- advance the sequence position, depending on the tempo modifier
         if tick % tempomod[track] == 0 then
-            position[track] = (position[track] % seqlen[track]) + 1
+            if reverse_play[track] == 0 then
+                position[track] = (position[track] % seqlen[track]) + 1
+            else
+                -- Thanks, S.O.! https://stackoverflow.com/a/39740009
+                position[track] = ((position[track] - 1) + 1 * seqlen[track] - 1)
+                                  % seqlen[track] + 1
+            end
 
             -- update the sequence
             update_sequence(track)
@@ -962,4 +965,3 @@ end
 function cleanup ()
   clk:stop()
 end
-
