@@ -95,7 +95,7 @@ function init()
 
     -- initalize variables
     for track = 1, 4 do
-        position[track] = 16
+        position[track] = 0
         tempomod[track] = 1
         seqlen[track] = 16
         dispersion[track] = 5
@@ -165,7 +165,7 @@ function init()
             clear_all_notes()
         end,
     }
-    
+
     --[[
     params:add{
         type = 'number',
@@ -191,7 +191,7 @@ function init()
         end,
     }
     ]]--
-    
+
     -- clock settings
     local clk_midi
     clk_midi = midi.connect()
@@ -439,34 +439,34 @@ function grid_device.key(x, y, z)
 
         -- sequence lengths for tracks 1-4
         if x > 0 and x < 5 and (y == 2 or y == 3) then
-            local local_x = x
+            local track = x
             if y == 2 then
-                seqlen[local_x] = seqlen[local_x] + 1
-                if seqlen[local_x] > 16 then
-                    seqlen[local_x] = 1
+                seqlen[track] = seqlen[track] + 1
+                if seqlen[track] > 16 then
+                    seqlen[track] = 1
                 end
             else
-                seqlen[local_x] = seqlen[local_x] - 1
-                if seqlen[local_x] < 1 then
-                    seqlen[local_x] = 16
+                seqlen[track] = seqlen[track] - 1
+                if seqlen[track] < 1 then
+                    seqlen[track] = 16
                 end
             end
-            position[local_x] = 16
+            position[track] = 0
             press = coord
         end
 
         -- dispersion parameter for tracks 1-4
         if x > 0 and x < 5 and (y == 5 or y == 6) then
-            local local_x = x
+            local track = x
             if y == 5 then
-                dispersion[local_x] = dispersion[local_x] + 1
-                if dispersion[local_x] > 10 then
-                    dispersion[local_x] = 10
+                dispersion[track] = dispersion[track] + 1
+                if dispersion[track] > 10 then
+                    dispersion[track] = 10
                 end
             else
-                dispersion[local_x] = dispersion[local_x] - 1
-                if dispersion[local_x] < 0 then
-                    dispersion[local_x] = 0
+                dispersion[track] = dispersion[track] - 1
+                if dispersion[track] < 0 then
+                    dispersion[track] = 0
                 end
             end
             press = coord
