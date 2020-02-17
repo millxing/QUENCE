@@ -95,7 +95,7 @@ function init()
 
     -- initalize variables
     for track = 1, 4 do
-        position[track] = 16
+        position[track] = 0
         tempomod[track] = 1
         seqlen[track] = 16
         dispersion[track] = 5
@@ -451,7 +451,7 @@ function grid_device.key(x, y, z)
                     seqlen[local_x] = 16
                 end
             end
-            position[local_x] = 16
+            position[local_x] = 0
             press = coord
         end
 
