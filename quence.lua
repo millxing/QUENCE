@@ -446,7 +446,7 @@ function grid_device.key(x, y, z)
             if y == 2 then
                 seqlen[local_x] = seqlen[local_x] + 1
                 if seqlen[local_x] > 16 then
-                    seqlen[local_x] = 16
+                    seqlen[local_x] = 1
                 end
             else
                 seqlen[local_x] = seqlen[local_x] - 1
