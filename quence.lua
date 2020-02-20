@@ -90,6 +90,7 @@ local grid_device = grid.connect()
 local midi_device = midi.connect()
 
 function init()
+    grid_device:rotation(0)
     opening_animation()
     math.randomseed(os.time())
 
@@ -189,6 +190,23 @@ function init()
         end,
     }
     ]]--
+    params:add{
+        type = 'option',
+        id = 'rotation',
+        name = 'grid rotation',
+        -- really doesn't make sense to offer all four options here
+        options = {'0', '180'},
+        default = 1,
+        action = function(value)
+            -- hack
+            if value == 1 then
+                value = 0
+            end
+            -- grid API expects [0-3]
+            grid_device:rotation(value)
+            grid_redraw()
+        end,
+    }
 
     -- clock settings
     local clk_midi
