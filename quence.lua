@@ -161,9 +161,7 @@ function init()
         id = 'output',
         name = 'output',
         options = options.OUTPUT,
-        action = function()
-            clear_all_notes()
-        end,
+        action = clear_all_notes,
     }
 
     --[[
@@ -760,7 +758,7 @@ function count()
             -- turn off the last note
             if mnote[track] > 0 or mute[track] == 1 then
                 if params:get('output') == 2 or params:get('output') == 3 then
-                    engine.noteOff(track)
+                    engine.noteOff(mnote[track])
                 end
                 if (params:get('output') == 1 or params:get('output') == 3) then
                     midi_device:note_off(mnote[track], 0, track)
@@ -774,7 +772,7 @@ function count()
                 if note > 0 and mute[track] == 0 then
                     if params:get('output') == 2 or params:get('output') == 3 then
                         local freq = music.note_num_to_freq(note)
-                        engine.noteOn(track, freq, 90)
+                        engine.noteOn(note, freq, 90)
                     end
                     if (params:get('output') == 1 or params:get('output') == 3) then
                         midi_device:note_on(note, 90, track)
@@ -900,10 +898,8 @@ function sync_tracks()
 end
 
 function clear_all_notes()
+    engine.noteKillAll()
     for track = 1, 4 do
-        if (params:get('output') == 2 or params:get('output') == 3) then
-            engine.noteKillAll()
-        end
         for note = 1, #scale do
             if (params:get('output') == 1 or params:get('output') == 3) then
                 midi_device:note_off(scale[note], 0, track)
