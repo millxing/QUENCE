@@ -749,6 +749,10 @@ function count()
             if reverse_play[track] == 0 then
                 position[track] = (position[track] % seqlen[track]) + 1
             else
+                -- fix up resets for reverse play
+                if position[track] == 0 then
+                    position[track] = seqlen[track] + 1
+                end
                 -- Thanks, S.O.! https://stackoverflow.com/a/39740009
                 position[track] = ((position[track] - 1) + 1 * seqlen[track] - 1)
                                   % seqlen[track] + 1
