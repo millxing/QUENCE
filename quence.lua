@@ -46,7 +46,7 @@ local music = require 'musicutil'
 local beatclock = require 'beatclock'
 local MollyThePoly = require 'molly_the_poly/lib/molly_the_poly_engine'
 local options = {}
-options.OUTPUT = {'midi', 'audio', 'midi + audio'}
+options.OUTPUT = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv'}
 
 -- declare variables
 local position = {}
@@ -88,6 +88,25 @@ local grid_device = grid.connect()
 
 -- midi code
 local midi_device = midi.connect()
+
+-- set up just friends
+local function setup_jf()
+  if params:get('output') == 4 then
+    crow.ii.pullup(true)
+    crow.ii.jf.mode(1)
+  else
+    crow.ii.pullup(false)
+    crow.ii.jf.mode(0)
+  end
+end
+
+-- set up crow cv outs
+local function setup_crow_cv()
+  if params:get('output') == 5 then
+    crow.output[2].action = "{to(5,0),to(0,0.25)}"
+  end
+end
+
 
 function init()
     grid_device:rotation(0)
@@ -162,7 +181,11 @@ function init()
         id = 'output',
         name = 'output',
         options = options.OUTPUT,
-        action = clear_all_notes,
+        action = function()
+          clear_all_notes()
+          setup_jf()
+          setup_crow_cv()
+        end,
     }
 
     --[[
@@ -798,6 +821,13 @@ function count()
                     end
                     if (params:get('output') == 1 or params:get('output') == 3) then
                         midi_device:note_on(note, 90, track)
+                    end
+                    if params:get('output') == 4 then
+                      crow.ii.jf.play_voice(track, (note - 60) / 12, 5)
+                    end
+                    if params:get('output') == 5 then
+                      crow.output[1].volts = (note - 60) / 12
+                      crow.output[2].execute()
                     end
                     mnote[track] = note
                 end
