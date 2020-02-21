@@ -258,15 +258,16 @@ function redraw()
     screen.move(0, 10)
     screen.text('global bpm : ' .. params:get('bpm'))
     screen.move(0, 20)
-    screen.text('tonic and scale : ' .. toniclist[tonicnum] .. ' ' .. music.SCALES[mode]
-                    .name)
+    screen.text('tonic : ' .. toniclist[tonicnum])
     screen.move(0, 30)
+    screen.text('scale : ' .. music.SCALES[mode].name)
+    screen.move(0, 40)
     screen.text('sequence lengths : ' .. seqlen[1] .. ' ' .. seqlen[2] .. ' ' .. seqlen[3]
                     .. ' ' .. seqlen[4])
-    screen.move(0, 40)
+    screen.move(0, 50)
     screen.text('tempo modifiers : ' .. tempomod[1] .. ' ' .. tempomod[2] .. ' '
                     .. tempomod[3] .. ' ' .. tempomod[4])
-    screen.move(0, 50)
+    screen.move(0, 60)
     screen.text('dispersions : ' .. dispersion[1] .. ' ' .. dispersion[2] .. ' '
                     .. dispersion[3] .. ' ' .. dispersion[4])
     screen.update()
