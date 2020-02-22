@@ -46,7 +46,10 @@ local music = require 'musicutil'
 local beatclock = require 'beatclock'
 local MollyThePoly = require 'molly_the_poly/lib/molly_the_poly_engine'
 local options = {}
-options.OUTPUT = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv'}
+options.OUTPUT1 = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv'}
+options.OUTPUT2 = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv'}
+options.OUTPUT3 = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv'}
+options.OUTPUT4 = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv'}
 
 -- declare variables
 local position = {}
@@ -82,6 +85,10 @@ local steps_copy = {}
 local rests_copy = {}
 local clk = beatclock.new()
 local reverse_play = {}
+local outnum = {}
+local trackout = ' '
+local pxcurve1 = 0
+local pxcurve2 = 0
 
 -- connect grid
 local grid_device = grid.connect()
@@ -89,24 +96,19 @@ local grid_device = grid.connect()
 -- midi code
 local midi_device = midi.connect()
 
+crow.ii.pullup(false)
+crow.ii.jf.mode(0)
+
 -- set up just friends
 local function setup_jf()
-  if params:get('output') == 4 then
     crow.ii.pullup(true)
     crow.ii.jf.mode(1)
-  else
-    crow.ii.pullup(false)
-    crow.ii.jf.mode(0)
-  end
 end
 
 -- set up crow cv outs
 local function setup_crow_cv()
-  if params:get('output') == 5 then
     crow.output[2].action = "{to(5,0),to(0,0.25)}"
-  end
 end
-
 
 function init()
     grid_device:rotation(0)
@@ -128,23 +130,27 @@ function init()
     toniclist = {'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'}
     tonicnum = 1
 
+    
     -- probabilities for randomness and rest frequencies
+    pxcurve1 = 1.5
     changelist = {
         0,
-        (1 / 6) ^ 1.5,
-        (2 / 6) ^ 1.5,
-        (3 / 6) ^ 1.5,
-        (4 / 6) ^ 1.5,
-        (5 / 6) ^ 1.5,
+        (1 / 6) ^ pxcurve1,
+        (2 / 6) ^ pxcurve1,
+        (3 / 6) ^ pxcurve1,
+        (4 / 6) ^ pxcurve1,
+        (5 / 6) ^ pxcurve1,
         1.00,
     }
+    
+    pxcurve2 = 1.5
     rflist = {
         0,
-        (1 / 6) ^ 1.5,
-        (2 / 6) ^ 1.5,
-        (3 / 6) ^ 1.5,
-        (4 / 6) ^ 1.5,
-        (5 / 6) ^ 1.5,
+        (1 / 6) ^ pxcurve2,
+        (2 / 6) ^ pxcurve2,
+        (3 / 6) ^ pxcurve2,
+        (4 / 6) ^ pxcurve2,
+        (5 / 6) ^ pxcurve2,
         1,
     }
 
@@ -178,41 +184,49 @@ function init()
     end
     params:add{
         type = 'option',
-        id = 'output',
-        name = 'output',
-        options = options.OUTPUT,
+        id = 'output1',
+        name = 'output1',
+        options = options.OUTPUT1,
         action = function()
           clear_all_notes()
-          setup_jf()
-          setup_crow_cv()
-        end,
-    }
-
-    --[[
-    params:add{
-        type = 'number',
-        id = 'midi_out_device',
-        name = 'midi out device',
-        min = 1,
-        max = 4,
-        default = 1,
-        action = function(value)
-            midi_out_device = midi.connect(value)
+          if params:get('output1') == 4 then setup_jf() end
+          if params:get('output1') == 5 then setup_crow_cv() end
         end,
     }
     params:add{
-        type = 'number',
-        id = 'midi_out_channel',
-        name = 'midi out channel',
-        min = 1,
-        max = 16,
-        default = 1,
-        action = function(value)
-            clear_all_notes()
-            midi_out_channel = value
+        type = 'option',
+        id = 'output2',
+        name = 'output2',
+        options = options.OUTPUT2,
+        action = function()
+          clear_all_notes()
+          if params:get('output2') == 4 then setup_jf() end
+          if params:get('output2') == 5 then setup_crow_cv() end
         end,
     }
-    ]]--
+    params:add{
+        type = 'option',
+        id = 'output3',
+        name = 'output3',
+        options = options.OUTPUT3,
+        action = function()
+          clear_all_notes()
+          if params:get('output3') == 4 then setup_jf() end
+          if params:get('output3') == 5 then setup_crow_cv() end
+        end,
+    }
+    params:add{
+        type = 'option',
+        id = 'output4',
+        name = 'output4',
+        options = options.OUTPUT4,
+        action = function()
+          clear_all_notes()
+          if params:get('output4') == 4 then setup_jf() end
+          if params:get('output4') == 5 then setup_crow_cv() end
+        end,
+    }
+    params:add_separator()
     params:add{
         type = 'option',
         id = 'rotation',
@@ -237,10 +251,10 @@ function init()
     clk_midi.event = clk.process_midi
     clk.on_step = count
     clk.on_select_internal = function()
-        print('internal')
+        --print('internal')
     end
     clk.on_select_external = function()
-        print('external')
+        --print('external')
     end
     clk:add_clock_params()
     params:set('bpm', tempo)
@@ -665,11 +679,17 @@ function grid_device.key(x, y, z)
             -- clear all note ons
             if pause == 1 then
                 for track = 1, 4 do
+                  
+                  if track == 1 then trackout = 'output1' end
+                  if track == 2 then trackout = 'output2' end
+                  if track == 3 then trackout = 'output3' end
+                  if track == 4 then trackout = 'output4' end                  
+                  
                     if mnote[track] > 0 then
-                        if params:get('output') == 2 or params:get('output') == 3 then
+                        if params:get(trackout) == 2 or params:get(trackout) == 3 then
                             engine.noteKillAll()
                         end
-                        if (params:get('output') == 1 or params:get('output') == 3) then
+                        if (params:get(trackout) == 1 or params:get(trackout) == 3) then
                             midi_device:note_off(mnote[track], 0, track)
                         end
                     end
@@ -784,10 +804,15 @@ end
 
 function count()
     tick = tick + 1
-
+    
     -- moves the sequence ahead by one step and turns on/off notes
     for track = 1, 4 do
 
+        if track == 1 then trackout = 'output1' end
+        if track == 2 then trackout = 'output2' end
+        if track == 3 then trackout = 'output3' end
+        if track == 4 then trackout = 'output4' end
+        
         -- advance the sequence position, depending on the tempo modifier
         if tick % tempomod[track] == 0 then
             if reverse_play[track] == 0 then
@@ -807,10 +832,10 @@ function count()
 
             -- turn off the last note
             if mnote[track] > 0 or mute[track] == 1 then
-                if params:get('output') == 2 or params:get('output') == 3 then
+                if params:get(trackout) == 2 or params:get(trackout) == 3 then
                     engine.noteOff(mnote[track])
                 end
-                if (params:get('output') == 1 or params:get('output') == 3) then
+                if (params:get(trackout) == 1 or params:get(trackout) == 3) then
                     midi_device:note_off(mnote[track], 0, track)
                 end
             end
@@ -820,17 +845,18 @@ function count()
             if rests[track][position[track]] == 0 and note ~= nil then
                 note = note + transpose
                 if note > 0 and mute[track] == 0 then
-                    if params:get('output') == 2 or params:get('output') == 3 then
+                    if params:get(trackout) == 2 or params:get(trackout) == 3 then
                         local freq = music.note_num_to_freq(note)
                         engine.noteOn(note, freq, 90)
+                        print(note)
                     end
-                    if (params:get('output') == 1 or params:get('output') == 3) then
+                    if (params:get(trackout) == 1 or params:get(trackout) == 3) then
                         midi_device:note_on(note, 90, track)
                     end
-                    if params:get('output') == 4 then
+                    if params:get(trackout) == 4 then
                       crow.ii.jf.play_voice(track, (note - 60) / 12, 5)
                     end
-                    if params:get('output') == 5 then
+                    if params:get(trackout) == 5 then
                       crow.output[1].volts = (note - 60) / 12
                       crow.output[2].execute()
                     end
@@ -957,8 +983,13 @@ end
 function clear_all_notes()
     engine.noteKillAll()
     for track = 1, 4 do
+        if track == 1 then trackout = 'output1' end
+        if track == 2 then trackout = 'output2' end
+        if track == 3 then trackout = 'output3' end
+        if track == 4 then trackout = 'output4' end
+        
         for note = 1, #scale do
-            if (params:get('output') == 1 or params:get('output') == 3) then
+            if (params:get(trackout) == 1 or params:get(trackout) == 3) then
                 midi_device:note_off(scale[note], 0, track)
             end
         end
