@@ -86,7 +86,7 @@ local rests_copy = {}
 local clk = beatclock.new()
 local reverse_play = {}
 local outnum = {}
-local oo = ' '
+local trackout = ' '
 local pxcurve1 = 0
 local pxcurve2 = 0
 
@@ -676,16 +676,16 @@ function grid_device.key(x, y, z)
             if pause == 1 then
                 for track = 1, 4 do
                   
-                  if track == 1 then oo = 'output1' end
-                  if track == 2 then oo = 'output2' end
-                  if track == 3 then oo = 'output3' end
-                  if track == 4 then oo = 'output4' end                  
+                  if track == 1 then trackout = 'output1' end
+                  if track == 2 then trackout = 'output2' end
+                  if track == 3 then trackout = 'output3' end
+                  if track == 4 then trackout = 'output4' end                  
                   
                     if mnote[track] > 0 then
-                        if params:get(oo) == 2 or params:get(oo) == 3 then
+                        if params:get(trackout) == 2 or params:get(trackout) == 3 then
                             engine.noteKillAll()
                         end
-                        if (params:get(oo) == 1 or params:get(oo) == 3) then
+                        if (params:get(trackout) == 1 or params:get(trackout) == 3) then
                             midi_device:note_off(mnote[track], 0, track)
                         end
                     end
@@ -804,10 +804,10 @@ function count()
     -- moves the sequence ahead by one step and turns on/off notes
     for track = 1, 4 do
 
-        if track == 1 then oo = 'output1' end
-        if track == 2 then oo = 'output2' end
-        if track == 3 then oo = 'output3' end
-        if track == 4 then oo = 'output4' end
+        if track == 1 then trackout = 'output1' end
+        if track == 2 then trackout = 'output2' end
+        if track == 3 then trackout = 'output3' end
+        if track == 4 then trackout = 'output4' end
         
         -- advance the sequence position, depending on the tempo modifier
         if tick % tempomod[track] == 0 then
@@ -828,10 +828,10 @@ function count()
 
             -- turn off the last note
             if mnote[track] > 0 or mute[track] == 1 then
-                if params:get(oo) == 2 or params:get(oo) == 3 then
+                if params:get(trackout) == 2 or params:get(trackout) == 3 then
                     engine.noteOff(mnote[track])
                 end
-                if (params:get(oo) == 1 or params:get(oo) == 3) then
+                if (params:get(trackout) == 1 or params:get(trackout) == 3) then
                     midi_device:note_off(mnote[track], 0, track)
                 end
             end
@@ -841,18 +841,18 @@ function count()
             if rests[track][position[track]] == 0 and note ~= nil then
                 note = note + transpose
                 if note > 0 and mute[track] == 0 then
-                    if params:get(oo) == 2 or params:get(oo) == 3 then
+                    if params:get(trackout) == 2 or params:get(trackout) == 3 then
                         local freq = music.note_num_to_freq(note)
                         engine.noteOn(note, freq, 90)
                         print(note)
                     end
-                    if (params:get(oo) == 1 or params:get(oo) == 3) then
+                    if (params:get(trackout) == 1 or params:get(trackout) == 3) then
                         midi_device:note_on(note, 90, track)
                     end
-                    if params:get(oo) == 4 then
+                    if params:get(trackout) == 4 then
                       crow.ii.jf.play_voice(track, (note - 60) / 12, 5)
                     end
-                    if params:get(oo) == 5 then
+                    if params:get(trackout) == 5 then
                       crow.output[1].volts = (note - 60) / 12
                       crow.output[2].execute()
                     end
@@ -979,13 +979,13 @@ end
 function clear_all_notes()
     engine.noteKillAll()
     for track = 1, 4 do
-        if track == 1 then oo = 'output1' end
-        if track == 2 then oo = 'output2' end
-        if track == 3 then oo = 'output3' end
-        if track == 4 then oo = 'output4' end
+        if track == 1 then trackout = 'output1' end
+        if track == 2 then trackout = 'output2' end
+        if track == 3 then trackout = 'output3' end
+        if track == 4 then trackout = 'output4' end
         
         for note = 1, #scale do
-            if (params:get(oo) == 1 or params:get(oo) == 3) then
+            if (params:get(trackout) == 1 or params:get(trackout) == 3) then
                 midi_device:note_off(scale[note], 0, track)
             end
         end
