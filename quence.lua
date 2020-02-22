@@ -907,6 +907,16 @@ function key(n, z)
     end
 end
 
+function enc(n, delta)
+    if n == 2 then
+        if delta > 0 then
+            shift_right()
+        elseif delta < 0 then
+            shift_left()
+        end
+    end
+  end
+
 function shift_left()
     -- shifts the sequence to the left, wrapping the first note to the end of the sequence
     -- rewrite this using deepcopy
