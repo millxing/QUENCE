@@ -256,7 +256,7 @@ function init()
     clk.on_select_external = function()
         --print('external')
     end
-    --clk:add_clock_params()
+    clk:add_clock_params()
     params:set('bpm', tempo)
     params:add_separator()
     MollyThePoly.add_params()
