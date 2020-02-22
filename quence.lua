@@ -226,7 +226,7 @@ function init()
           if params:get('output4') == 5 then setup_crow_cv() end
         end,
     }
-
+    params:add_seperator()
     params:add{
         type = 'option',
         id = 'rotation',
@@ -256,7 +256,7 @@ function init()
     clk.on_select_external = function()
         --print('external')
     end
-    clk:add_clock_params()
+    --clk:add_clock_params()
     params:set('bpm', tempo)
     params:add_separator()
     MollyThePoly.add_params()
