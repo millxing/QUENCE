@@ -350,6 +350,29 @@ end
 
 -- redraw the track view for the selected track
 function grid_redraw_page()
+    grid_redraw_track()
+
+    -- draw randomness selector and rest frequency selector on row 4
+    for led = 1, 7 do
+        grid_device:led(led, 4, led == change[page] and maxgrid or inact)
+        grid_device:led(led + 9, 4, led == restfreq[page] and maxgrid or inact)
+    end
+
+    -- draw various buttons on rows 6 and 7
+    grid_device:led(1, 6, (press == 106) and maxgrid or inact) -- copy
+    grid_device:led(2, 6, (press == 206) and maxgrid or inact) -- paste
+    grid_device:led(4, 6, (press == 406) and maxgrid or inact) -- shift ->
+    grid_device:led(5, 6, (press == 506) and maxgrid or inact) -- shift <-
+    grid_device:led(12, 6, (press == 1206) and maxgrid or inact) -- transpose up
+    grid_device:led(13, 6, (press == 1306) and maxgrid or inact) -- transpose down
+    grid_device:led(15, 6, (press == 1506) and maxgrid or inact) -- invert
+    grid_device:led(16, 6, (press == 1606) and maxgrid or inact) -- reverse
+    grid_device:led(8, 7, (press == 807) and maxgrid or inact) -- track lock
+    grid_device:led(9, 7, (press == 907) and maxgrid or inact) -- track clear
+end
+
+-- redraw just the sequence for the current page
+function grid_redraw_track()
     -- turn off all leds on the top 2 rows
     for led = 1, seqlen[page] do
         grid_device:led(led, 1, 0)
@@ -372,24 +395,6 @@ function grid_redraw_page()
             grid_device:led(led, 2, 0)
         end
     end
-
-    -- draw randomness selector and rest frequency selector on row 4
-    for led = 1, 7 do
-        grid_device:led(led, 4, led == change[page] and maxgrid or inact)
-        grid_device:led(led + 9, 4, led == restfreq[page] and maxgrid or inact)
-    end
-
-    -- draw various buttons on rows 6 and 7
-    grid_device:led(1, 6, (press == 106) and maxgrid or inact) -- copy
-    grid_device:led(2, 6, (press == 206) and maxgrid or inact) -- paste
-    grid_device:led(4, 6, (press == 406) and maxgrid or inact) -- shift ->
-    grid_device:led(5, 6, (press == 506) and maxgrid or inact) -- shift <-
-    grid_device:led(12, 6, (press == 1206) and maxgrid or inact) -- transpose up
-    grid_device:led(13, 6, (press == 1306) and maxgrid or inact) -- transpose down
-    grid_device:led(15, 6, (press == 1506) and maxgrid or inact) -- invert
-    grid_device:led(16, 6, (press == 1606) and maxgrid or inact) -- reverse
-    grid_device:led(8, 7, (press == 807) and maxgrid or inact) -- track lock
-    grid_device:led(9, 7, (press == 907) and maxgrid or inact) -- track clear
 end
 
 -- grid events

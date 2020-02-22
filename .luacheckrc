@@ -18,6 +18,7 @@ stds.quence = {
         'sleep',
         'sync_tracks',
         'update_sequence',
+        'grid_redraw_track',
     }
 }
 stds.norns = {
