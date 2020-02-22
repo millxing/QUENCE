@@ -226,7 +226,7 @@ function init()
           if params:get('output4') == 5 then setup_crow_cv() end
         end,
     }
-    params:add_seperator()
+    --params:add_seperator()
     params:add{
         type = 'option',
         id = 'rotation',
