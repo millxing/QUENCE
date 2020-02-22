@@ -23,6 +23,7 @@ stds.quence = {
 stds.norns = {
     globals = {
         'cleanup',
+        'crow',
         'enc',
         'engine',
         'grid',
