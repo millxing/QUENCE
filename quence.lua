@@ -491,7 +491,11 @@ function grid_device.key(x, y, z)
                     seqlen[track] = 16
                 end
             end
-            position[track] = 0
+            if reverse_play[track] == 0 then
+                position[track] = 0
+            else
+                position[track] = seqlen[track] + 1
+            end
             press = coord
         end
 
