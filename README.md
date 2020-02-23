@@ -10,6 +10,8 @@ inspired by Turing Machine, Fugue Machine, and Physical (Norns Study 4)
 
 updated for norns 2.0 + molly_the_poly output by [`_ground_state_`]
 
+updated for crows by [`justmat`]
+
 [`tutorial video`]
 
 ## grid usage
@@ -61,3 +63,5 @@ Note '.lua-format.cfg' and '.luacheckrc' in the root of this repo. We recommend 
 [`luaformatter`]: https://github.com/Koihik/LuaFormatter
 
 [`lua-check`]: https://github.com/mpeterv/luacheck
+
+[`justmat`]: https://llllllll.co/u/justmat/summary
