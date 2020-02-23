@@ -52,10 +52,10 @@ local music = require 'musicutil'
 local beatclock = require 'beatclock'
 local MollyThePoly = require 'molly_the_poly/lib/molly_the_poly_engine'
 local options = {}
-options.OUTPUT1 = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv'}
-options.OUTPUT2 = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv'}
-options.OUTPUT3 = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv'}
-options.OUTPUT4 = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv'}
+options.OUTPUT1 = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv 1/2', 'crow cv 3/4'}
+options.OUTPUT2 = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv 1/2', 'crow cv 3/4'}
+options.OUTPUT3 = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv 1/2', 'crow cv 3/4'}
+options.OUTPUT4 = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv 1/2', 'crow cv 3/4'}
 
 -- declare variables
 local position = {}
@@ -102,18 +102,21 @@ local grid_device = grid.connect()
 -- midi code
 local midi_device = midi.connect()
 
-crow.ii.pullup(false)
-crow.ii.jf.mode(0)
-
 -- set up just friends
 local function setup_jf()
+  if params:get('output1') == 4 or params:get('output2') == 4 or params:get('output3') == 4 or params:get('output4') == 4 then
     crow.ii.pullup(true)
     crow.ii.jf.mode(1)
+  else
+    crow.ii.pullup(false)
+    crow.ii.jf.mode(0)
+  end
 end
 
 -- set up crow cv outs
 local function setup_crow_cv()
     crow.output[2].action = "{to(5,0),to(0,0.25)}"
+    crow.output[4].action = "{to(5,0),to(0,0.25)}"
 end
 
 function init()
@@ -196,7 +199,7 @@ function init()
         action = function()
           clear_all_notes()
           if params:get('output1') == 4 then setup_jf() end
-          if params:get('output1') == 5 then setup_crow_cv() end
+          if params:get('output1') == 5 or params:get('output1') == 6 then setup_crow_cv() end
         end,
     }
     params:add{
@@ -207,7 +210,7 @@ function init()
         action = function()
           clear_all_notes()
           if params:get('output2') == 4 then setup_jf() end
-          if params:get('output2') == 5 then setup_crow_cv() end
+          if params:get('output2') == 5 or params:get('output1') == 6 then setup_crow_cv() end
         end,
     }
     params:add{
@@ -218,7 +221,7 @@ function init()
         action = function()
           clear_all_notes()
           if params:get('output3') == 4 then setup_jf() end
-          if params:get('output3') == 5 then setup_crow_cv() end
+          if params:get('output3') == 5 or params:get('output1') == 6 then setup_crow_cv() end
         end,
     }
     params:add{
@@ -229,7 +232,7 @@ function init()
         action = function()
           clear_all_notes()
           if params:get('output4') == 4 then setup_jf() end
-          if params:get('output4') == 5 then setup_crow_cv() end
+          if params:get('output4') == 5 or params:get('output1') == 6 then setup_crow_cv() end
         end,
     }
     params:add_separator()
@@ -874,6 +877,10 @@ function count()
                     if params:get(trackout) == 5 then
                       crow.output[1].volts = (note - 60) / 12
                       crow.output[2].execute()
+                    end
+                    if params:get(trackout) == 6 then
+                      crow.output[3].volts = (note - 60) / 12
+                      crow.output[4].execute()
                     end
                     mnote[track] = note
                 end
