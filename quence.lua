@@ -1,4 +1,4 @@
--- QUENCE: a probababilistic sequencer
+-- QUENCE: sequencer
 -- v2.2.8 @spunoza
 -- llllllll.co/t/29436
 
@@ -615,13 +615,11 @@ function grid_device.key(x, y, z)
             press = coord
         end
 
+
         -- scalar transpose down (row 6, col 12)
         if coord == 1206 then
             for step = 1, seqlen[page] do
                 steps[page][step] = steps[page][step] - 1
-                if steps[page][step] < 1 then
-                    steps[page][step] = #scale
-                end
             end
             press = coord
         end
@@ -630,13 +628,10 @@ function grid_device.key(x, y, z)
         if coord == 1306 then
             for step = 1, seqlen[page] do
                 steps[page][step] = steps[page][step] + 1
-                if steps[page][step] > #scale then
-                    steps[page][step] = 1
-                end
             end
             press = coord
         end
-
+    
         -- invert (row 6 col 15)
         if coord == 1506 then
             for step = 1, seqlen[page] do
@@ -844,7 +839,16 @@ function count()
                     midi_device:note_off(mnote[track], 0, track)
                 end
             end
-            local note = scale[steps[track][position[track]]]
+            
+            local stepvalue = steps[track][position[track]]
+            adjstepvalue = stepvalue
+            if stepvalue > #scale then
+              adjstepvalue = #scale
+            end
+            if stepvalue < 1 then
+              adjstepvalue = 1
+            end
+            local note = scale[adjstepvalue]
 
             -- turn on a note unless there is a rest
             if rests[track][position[track]] == 0 and note ~= nil then
