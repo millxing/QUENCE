@@ -620,10 +620,6 @@ function grid_device.key(x, y, z)
         if coord == 1206 then
             for step = 1, seqlen[page] do
                 steps[page][step] = steps[page][step] - 1
-                --if steps[page][step] < 1 then
-                --    --steps[page][step] = #scale
-                --    steps[page][step] = 1
-                --end
             end
             press = coord
         end
@@ -632,10 +628,6 @@ function grid_device.key(x, y, z)
         if coord == 1306 then
             for step = 1, seqlen[page] do
                 steps[page][step] = steps[page][step] + 1
-                --if steps[page][step] > #scale then
-                --    --steps[page][step] = 1
-                --    steps[page][step] = #scale
-                --end
             end
             press = coord
         end
