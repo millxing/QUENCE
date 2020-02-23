@@ -7,11 +7,13 @@
 -- a probababilistic
 -- 4-track sequencer
 -- for norns and grid
--- with output for MIDI and
--- Molly the Poly
+-- with output for MIDI
+-- and Molly the Poly
+-- and crow
 --
 -- by Rob Schoen
 -- millxing at gmail
+-- https://llllllll.co/u/spunoza/summary
 -- https://github.com/millxing/QUENCE
 --
 -- inspired by
@@ -40,6 +42,10 @@
 -- + molly_the_poly output
 -- by _ground_state_
 -- https://llllllll.co/u/ground_state/summary
+--
+-- updated for crow and just friends
+-- by justmat
+-- https://llllllll.co/u/justmat/summary
 
 engine.name = 'MollyThePoly'
 local music = require 'musicutil'
