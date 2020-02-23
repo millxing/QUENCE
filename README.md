@@ -10,7 +10,7 @@ inspired by Turing Machine, Fugue Machine, and Physical (Norns Study 4)
 
 updated for norns 2.0 + molly_the_poly output by [`_ground_state_`]
 
-updated for crows by [`justmat`]
+updated for crow by [`justmat`]
 
 [`tutorial video`]
 
