@@ -2,7 +2,7 @@
 
 [`spunoza's`] [`QUENCE`], now updated for norns 2.0 + output to [`markeats'`] [`molly_the_poly`]
 
-a probababilistic 4-track sequencer for norns and grid with output for MIDI and Molly the Poly
+a probababilistic 4-track sequencer for norns and grid with outputs for MIDI, Crow, and Molly the Poly
 
 by Rob Schoen (millxing at gmail)
 
