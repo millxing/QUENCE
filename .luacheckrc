@@ -33,6 +33,7 @@ stds.norns = {
         'key',
         'metro',
         'midi',
+        'norns',
         'params',
         'redraw',
         'screen',

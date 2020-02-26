@@ -125,6 +125,10 @@ function init()
     grid_device:rotation(0)
     opening_animation()
     math.randomseed(os.time())
+    for knob = 2, 3 do
+        norns.enc.accel(knob, false)
+        norns.enc.sens(knob, 3)
+    end
 
     -- initalize variables
     for track = 1, 4 do
@@ -953,14 +957,31 @@ function key(n, z)
 end
 
 function enc(n, delta)
-    if n == 2 then
+    if n == 2 then  -- change seq length, with wrap
         if delta > 0 then
-            shift_right()
+            seqlen[page] = seqlen[page] + 1
+            if seqlen[page] > 16 then
+                seqlen[page] = 1
+            end
         elseif delta < 0 then
-            shift_left()
+            seqlen[page] = seqlen[page] - 1
+            if seqlen[page] < 1 then
+                seqlen[page] = 16
+            end
+        end
+        redraw()
+        tpage = -99  -- hack
+        grid_redraw()
+    elseif n == 3 then  -- shift sequence L/R
+        if pause == 0 then  -- doesn't seem to work well unless we're playing
+            if delta > 0 then
+                shift_right()
+            elseif delta < 0 then
+                shift_left()
+            end
         end
     end
-  end
+end
 
 function shift_left()
     -- shifts the sequence to the left, wrapping the first note to the end of the sequence
