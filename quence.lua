@@ -693,10 +693,7 @@ function grid_device.key(x, y, z)
             -- clear all note ons
             if pause == 1 then
                 for track = 1, 4 do
-                  if track == 1 then trackout = 'output1' end
-                  if track == 2 then trackout = 'output2' end
-                  if track == 3 then trackout = 'output3' end
-                  if track == 4 then trackout = 'output4' end
+                  trackout = 'output' .. track
                     if mnote[track] > 0 then
                         if params:get(trackout) == 2 or params:get(trackout) == 3 then
                             engine.noteKillAll()
@@ -819,10 +816,7 @@ function count()
 
     -- moves the sequence ahead by one step and turns on/off notes
     for track = 1, 4 do
-        if track == 1 then trackout = 'output1' end
-        if track == 2 then trackout = 'output2' end
-        if track == 3 then trackout = 'output3' end
-        if track == 4 then trackout = 'output4' end
+        trackout = 'output' .. track
 
         -- advance the sequence position, depending on the tempo modifier
         if tick % tempomod[track] == 0 then
@@ -1034,10 +1028,7 @@ end
 function clear_all_notes()
     engine.noteKillAll()
     for track = 1, 4 do
-        if track == 1 then trackout = 'output1' end
-        if track == 2 then trackout = 'output2' end
-        if track == 3 then trackout = 'output3' end
-        if track == 4 then trackout = 'output4' end
+        trackout = 'output' .. track
 
         for note = 1, #scale do
             if (params:get(trackout) == 1 or params:get(trackout) == 3) then
