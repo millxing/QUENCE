@@ -123,6 +123,11 @@ local function setup_crow_cv()
     crow.output[4].action = "{to(5,0),to(0,0.25)}"
 end
 
+local function p_mode_to_char(track)
+    local chars = {'->', '<-', '<>'}
+    return chars[play_mode[track] + 1]
+end
+
 function init()
     grid_device:rotation(0)
     opening_animation()
@@ -280,25 +285,39 @@ function init()
     params:default()
 end
 
+local function screen_write(row, col, printable, level)
+    screen.level(level)
+    screen.move(row, col)
+    screen.text(printable)
+end
+
 -- redraw screen
 function redraw()
+    local bright = maxscreen - 4
     screen.clear()
-    screen.level(maxscreen)
-    screen.move(0, 10)
-    screen.text('global bpm : ' .. params:get('bpm'))
-    screen.move(0, 20)
-    screen.text('tonic : ' .. toniclist[tonicnum])
-    screen.move(0, 30)
-    screen.text('scale : ' .. music.SCALES[mode].name)
-    screen.move(0, 40)
-    screen.text('sequence lengths : ' .. seqlen[1] .. ' ' .. seqlen[2] .. ' ' .. seqlen[3]
-                    .. ' ' .. seqlen[4])
-    screen.move(0, 50)
-    screen.text('tempo modifiers : ' .. tempomod[1] .. ' ' .. tempomod[2] .. ' '
-                    .. tempomod[3] .. ' ' .. tempomod[4])
-    screen.move(0, 60)
-    screen.text('dispersions : ' .. dispersion[1] .. ' ' .. dispersion[2] .. ' '
-                    .. dispersion[3] .. ' ' .. dispersion[4])
+    screen_write(0, 10, 'global bpm: ', maxscreen)
+    screen_write(50, 10, params:get('bpm'), bright)
+    screen_write(92, 10, 'tonic: ', maxscreen)
+    screen_write(118, 10, toniclist[tonicnum], bright)
+    screen_write(0, 20, 'scale: ', maxscreen)
+    screen_write(27, 20, music.SCALES[mode].name, bright)
+    screen_write(0, 30, 'sequence lengths: ', maxscreen)
+    screen_write(80, 30, seqlen[1] .. ' ' .. seqlen[2] .. ' '
+                    .. seqlen[3] .. ' ' .. seqlen[4], bright)
+    screen_write(0, 40, 'tempo modifiers: ', maxscreen)
+    screen_write(73, 40, tempomod[1] .. ' ' .. tempomod[2] .. ' '
+                    .. tempomod[3] .. ' ' .. tempomod[4], bright)
+    screen_write(0, 50, 'dispersions: ', maxscreen)
+    screen_write(54, 50, dispersion[1] .. ' ' .. dispersion[2] .. ' '
+                    .. dispersion[3] .. ' ' .. dispersion[4], bright)
+    screen_write(0, 60, 'play mode: ', maxscreen)
+    screen_write(48, 60, p_mode_to_char(1), bright)
+    screen_write(56, 60, ' | ', maxscreen)
+    screen_write(65, 60, p_mode_to_char(2), bright)
+    screen_write(72, 60, ' | ', maxscreen)
+    screen_write(81, 60, p_mode_to_char(3), bright)
+    screen_write(88, 60, ' | ', maxscreen)
+    screen_write(97, 60, p_mode_to_char(4), bright)
     screen.update()
 end
 
