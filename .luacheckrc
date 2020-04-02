@@ -4,7 +4,6 @@ stds.quence = {
         'clear_all_notes',
         'count',
         'deepcopy',
-        'deepcopy',
         'grid_redraw_ctrl',
         'grid_redraw_home',
         'grid_redraw_page',
