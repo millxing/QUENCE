@@ -1124,5 +1124,5 @@ function sleep(secs)
 end
 
 function cleanup ()
-  clk:stop()
+  clock.cancel(clock_id)
 end
