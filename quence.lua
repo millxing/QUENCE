@@ -917,6 +917,7 @@ function count()
             end
         end
     end
+    redraw()
     grid_redraw()
 end
 
