@@ -454,7 +454,7 @@ function grid_device.key(x, y, z)
         -- coarse global tempo up
         if coord == 602 then
             tempo = tempo + 10
-            params:set('bpm', tempo)
+            params:set('clock_tempo', tempo)
             press = coord
         end
 
