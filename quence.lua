@@ -70,7 +70,7 @@ local tpage = 0
 local pagecopy = 0
 local lock = 0
 local pause = 1
-local run = 0
+local clock_id = 0
 local tick = 0
 local tonicnum = 0
 local toniclist = {}
@@ -716,9 +716,9 @@ function grid_device.key(x, y, z)
         if coord == 108 then
             pause = 1 - pause
             if pause == 0 then
-                run = clock.run(pulse)
+                clock_id = clock.run(pulse)
             else
-                clock.cancel(run)
+                clock.cancel(clock_id)
             end
 
             -- clear all note ons
