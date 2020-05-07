@@ -49,8 +49,6 @@
 
 engine.name = 'MollyThePoly'
 local music = require 'musicutil'
---local beatclock = require 'beatclock'
-
 local MollyThePoly = require 'molly_the_poly/lib/molly_the_poly_engine'
 local options = {}
 options.OUTPUT1 = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv 1/2', 'crow cv 3/4'}
@@ -91,7 +89,6 @@ local steps = {}
 local rests = {}
 local steps_copy = {}
 local rests_copy = {}
---local clk = beatclock.new()
 local trackout = ' '
 local pxcurve1 = 0
 local pxcurve2 = 0
