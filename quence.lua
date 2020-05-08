@@ -110,6 +110,14 @@ function pulse()
   end
 end
 
+function clock.transport.stop()
+  clock.cancel(clock_id)
+end
+
+function clock.transport.start()
+  clock_id = clock.run(pulse)
+end
+
 -- set up just friends
 local function setup_jf()
     if params:get('output1') == 4
