@@ -49,7 +49,6 @@
 
 engine.name = 'MollyThePoly'
 local music = require 'musicutil'
-local beatclock = require 'beatclock'
 local MollyThePoly = require 'molly_the_poly/lib/molly_the_poly_engine'
 local options = {}
 options.OUTPUT1 = {'midi', 'audio', 'midi + audio', 'crow jf', 'crow cv 1/2', 'crow cv 3/4'}
@@ -69,6 +68,7 @@ local tpage = 0
 local pagecopy = 0
 local lock = 0
 local pause = 1
+local clock_id = 0
 local tick = 0
 local tonicnum = 0
 local toniclist = {}
@@ -89,7 +89,6 @@ local steps = {}
 local rests = {}
 local steps_copy = {}
 local rests_copy = {}
-local clk = beatclock.new()
 local trackout = ' '
 local pxcurve1 = 0
 local pxcurve2 = 0
@@ -102,6 +101,22 @@ local grid_device = grid.connect()
 
 -- midi code
 local midi_device = midi.connect()
+
+-- for new clock system
+function pulse()
+  while true do
+    clock.sync(1/4)
+    count()
+  end
+end
+
+function clock.transport.stop()
+  clock.cancel(clock_id)
+end
+
+function clock.transport.start()
+  clock_id = clock.run(pulse)
+end
 
 -- set up just friends
 local function setup_jf()
@@ -269,15 +284,7 @@ function init()
         end,
     }
 
-    -- clock settings
-    local clk_midi
-    clk_midi = midi.connect()
-    clk_midi.event = clk.process_midi
-    clk.on_step = count
-    clk.on_select_internal = function() end
-    clk.on_select_external = function() end
-    clk:add_clock_params()
-    params:set('bpm', tempo)
+    params:set('clock_tempo', tempo)
     params:add_separator()
     MollyThePoly.add_params()
     redraw()
@@ -296,7 +303,7 @@ function redraw()
     local bright = maxscreen - 4
     screen.clear()
     screen_write(0, 10, 'global bpm: ', maxscreen)
-    screen_write(50, 10, params:get('bpm'), bright)
+    screen_write(50, 10, params:get('clock_tempo'), bright)
     screen_write(92, 10, 'tonic: ', maxscreen)
     screen_write(118, 10, toniclist[tonicnum], bright)
     screen_write(0, 20, 'scale: ', maxscreen)
@@ -455,7 +462,7 @@ function grid_device.key(x, y, z)
         -- coarse global tempo up
         if coord == 602 then
             tempo = tempo + 10
-            params:set('bpm', tempo)
+            params:set('clock_tempo', tempo)
             press = coord
         end
 
@@ -465,14 +472,14 @@ function grid_device.key(x, y, z)
             if tempo < 1 then
                 tempo = 10
             end
-            params:set('bpm', tempo)
+            params:set('clock_tempo', tempo)
             press = coord
         end
 
         -- fine global tempo up
         if coord == 702 then
             tempo = tempo + 1
-            params:set('bpm', tempo)
+            params:set('clock_tempo', tempo)
             press = coord
         end
 
@@ -482,7 +489,7 @@ function grid_device.key(x, y, z)
             if tempo < 1 then
                 tempo = 1
             end
-            params:set('bpm', tempo)
+            params:set('clock_tempo', tempo)
             press = coord
         end
 
@@ -710,14 +717,13 @@ function grid_device.key(x, y, z)
 
     -- toolbar button press events ---------------------------------------------------
     if z == 1 and y == 8 then
-
         -- pause all sequences (row 8, col 1)
         if coord == 108 then
             pause = 1 - pause
             if pause == 0 then
-                clk:start()
+                clock_id = clock.run(pulse)
             else
-                clk:stop()
+                clock.cancel(clock_id)
             end
 
             -- clear all note ons
@@ -919,6 +925,7 @@ function count()
             end
         end
     end
+    redraw()
     grid_redraw()
 end
 
@@ -1126,5 +1133,5 @@ function sleep(secs)
 end
 
 function cleanup ()
-  clk:stop()
+  clock.cancel(clock_id)
 end
